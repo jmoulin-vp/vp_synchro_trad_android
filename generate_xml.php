@@ -9,13 +9,13 @@
 require_once('include/function.php');
 
 $resDir = '/home/FRANCE-VPG/mfaye/www/vp_android/res/';
+$defaultBu = 'fr';
 
 parseAndroidCsvTranslation(true);
 
 $xmlToDeport = glob('strings_*.xml');
 $pattern = '~strings_([a-z]{2})\\.xml~';
 $buToCulture = array();
-$defaultBu = 'fr';
 $buToCulture['fr'] = 'fr';
 $buToCulture['br'] = 'pt-rBR';
 $buToCulture['pl'] = 'pl';
