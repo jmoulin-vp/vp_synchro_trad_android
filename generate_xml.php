@@ -8,7 +8,7 @@
 
 require_once('include/function.php');
 
-$resDir = '/home/FRANCE-VPG/mfaye/www/vp_android/res/';
+$resDir = '/home/FRANCE-VPG/user/www/dev_vp_android/res/';
 $defaultBu = 'fr';
 
 parseAndroidCsvTranslation(true);

@@ -193,7 +193,7 @@ function findPlurals($currentKeyList)
 
 function parseAndroidCsvTranslation($generateFile = false)
 {
-  $invalidXmlChars = array('&');
+  $invalidXmlChars = array('&', '</');
   $seenKeywordList = array();
 
   $finalCandidate = findFileToParse();
