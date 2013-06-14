@@ -81,20 +81,9 @@ function handleTranslation($data, $seenKeywordList, $languageMap, $invalidXmlCha
       if (isset($languageMap[$languageMapIndex]))
       {
         $translation = str_replace("\n", '\n', $data[$i]);
+        $translation = str_replace("<br>", '<br/>', $translation);
         $translation = trim($translation);
-        $needCData = false;
-        foreach ($invalidXmlChars as $char)
-        {
-          if (strpos($translation, $char) !== false)
-          {
-            $needCData = true;
-            break;
-          }
-        }
-        if ($needCData && $isForFile)
-        {
-          $translation = '<![CDATA[' . $translation . ']]>';
-        }
+        $translation = addCDataIfNecessary($invalidXmlChars, $isForFile, $translation);
         if ($translation != '')
         {
           $languageTranslations[$languageMap[$languageMapIndex]][$currentKeyword] = $translation;
@@ -121,6 +110,34 @@ function handleTranslation($data, $seenKeywordList, $languageMap, $invalidXmlCha
   }
 
   return $languageTranslations;
+}
+
+/**
+ * @param $invalidXmlChars
+ * @param $isForFile
+ * @param $translation
+ * @return string
+ */
+function addCDataIfNecessary($invalidXmlChars, $isForFile, $translation)
+{
+  $needCData = false;
+  foreach ($invalidXmlChars as $char)
+  {
+    if (strpos($translation, $char) !== false)
+    {
+      $needCData = true;
+      break;
+    }
+  }
+  if(!$needCData){
+    $needCData = hasLowerThanOrGreaterThan($translation);
+  }
+  if ($needCData && $isForFile)
+  {
+    $translation = '<![CDATA[' . $translation . ']]>';
+  }
+
+  return $translation;
 }
 
 
@@ -240,4 +257,14 @@ function parseAndroidCsvTranslation($generateFile = false)
   }
 
   return $languageTranslations;
+}
+
+function hasLowerThanOrGreaterThan($translation){
+  if($translation == '(<%1$ anos)'){
+    echo 'Strip tags ? : ' . strip_tags($translation) . PHP_EOL;
+  }
+  $tagLess = strip_tags($translation);
+  $hasLowerThan = (strpos($tagLess, '<') !== false);
+  $hasGreaterThan = (strpos($tagLess, '>') !== false);
+  return ($hasGreaterThan || $hasLowerThan);
 }
